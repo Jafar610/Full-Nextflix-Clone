@@ -21,12 +21,12 @@ function Hero() {
             temporibus qui.
           </p>
           <div className="flex justify-start items-center gap-3">
-            <div className="flex justify-center items-center gap-2 border border-[#E50914] px-5 py-2 rounded-md bg-[#E50914] text-white font-medium mr-5 cursor-pointer">
+            <div className="flex justify-center items-center gap-2 border border-[#E50914] px-5 py-2 rounded-md bg-[#E50914] text-white font-medium mr-5 cursor-pointer hover:bg-[#E50914]/90 transition duration-300 ease-in-out">
               <PlayCircleIcon className="text-4xl text-white mr-2" />
               <span className="text-1xl font-medium">Play</span>
             </div>
 
-            <div className="flex justify-center items-center gap-2 border border-gray-300 px-5 py-2 rounded-md bg-transparent text-gray-300 font-medium cursor-pointer">
+            <div className="flex justify-center items-center gap-2 border border-gray-300 px-5 py-2 rounded-md bg-transparent text-gray-300 font-medium cursor-pointer hover:bg-gray-900 hover:text-black transition duration-300 ease-in-out">
               <AddCircleIcon className="text-5xl text-white mr-2 cursor-pointer" />
               <span className="text-1xl text-white font-medium cursor-pointer">
                 My List
