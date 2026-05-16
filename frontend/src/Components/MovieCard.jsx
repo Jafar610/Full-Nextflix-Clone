@@ -7,7 +7,7 @@ function MovieCard() {
     <>
       <div className="w-[200px] h-[300px] bg-cover bg-center relative rounded-md cursor-pointer">
         <h2>Movie Categories</h2>
-        <div>
+        <div className='flex justify-start items-center gap-2'>
           <div>
             <img
               src="https://i.pinimg.com/1200x/93/bc/eb/93bceb9dc583c4511b9742b182b763aa.jpg"
