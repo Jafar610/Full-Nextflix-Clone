@@ -6,12 +6,7 @@ function Hero() {
   return (
     <>
       <div
-        className="w-full h-[500px] bg-cover bg-center relative"
-        style={{
-          backgroundImage:
-            "url('https://i.pinimg.com/1200x/93/bc/eb/93bceb9dc583c4511b9742b182b763aa.jpg')",
-        }}
-      >
+        className="h-[80vh] bg-[url('https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg')] bg-cover bg-center relative flex items-end">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-[#111] to-transparent"></div>
         <div className="absolute bottom-10 left-10 text-white">
           <h1 className="text-4xl font-bold mb-4 ">YOU</h1>
