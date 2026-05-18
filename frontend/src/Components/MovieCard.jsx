@@ -4,7 +4,8 @@ import Row from "./Row";
 function MovieCard() {
   return (
     <>
-     <Row/>
+     <Row title="Originals"/>
+     <Row title="Trending Now"/>
     </>
   );
 }

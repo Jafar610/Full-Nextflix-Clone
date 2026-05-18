@@ -1,88 +1,84 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { requests } from "../api/tmdb";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { Autoplay } from "swiper/modules";
 
-function Row() {
-  const [movies, setMovies] = useState([]);
-
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const response = await axios.get(requests.popular);
-        setMovies(response.data.results);
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      }
-    };
-
-    fetchMovies();
-  }, []);
-
+function Row({title}) {
   return (
     <>
-      <div className="bg-[#121212] p-4 text-white">
-        <div className="w-[300px] h-[400px] bg-cover bg-center relative rounded-md cursor-pointer m-3">
-          <h2 className="text-xl font-bold mb-2">Movie Categories</h2>
+      <div className="flex justify-center items-center bg-[#121212] w-full text-white text-3xl font-bold">
+        <div className="container mx-auto">
+          <h1 className="text-3xl font-bold mb-4">{title}</h1>
 
           <Swiper
-            slidesPerView={2}
+            className="py-4"
+            modules={[Autoplay]}
             spaceBetween={10}
-            breakpoints={{
-              640: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-              },
-              768: {
-                slidesPerView: 3,
-                spaceBetween: 30,
-              },
-              1024: {
-                slidesPerView: 4,
-                spaceBetween: 40,
-              },
-            }}
+            slidesPerView={5}
             autoplay={{
               delay: 2500,
               disableOnInteraction: false,
             }}
-            loop={true}
           >
-            <div className="flex justify-start items-center gap-4 mt-3">
-              <SwiperSlide>
-                <div>
+            <SwiperSlide>
+              <div className="flex items-center justify-center w-48 h-72">
                 <img
-                  src="https://i.pinimg.com/1200x/93/bc/eb/93bceb9dc583c4511b9742b182b763aa.jpg"
-                  alt=""
-                  className="w-full h-full object-cover rounded-md"
+                  src="https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg"
+                  alt="Movie 1"
+                  className="w-full h-full object-cover rounded-lg flex-1"
                 />
               </div>
-              </SwiperSlide>
+            </SwiperSlide>
 
-              <SwiperSlide>
-                <div>
+            <SwiperSlide>
+              <div className="flex items-center justify-center w-48 h-72">
                 <img
-                  src="https://i.pinimg.com/1200x/93/bc/eb/93bceb9dc583c4511b9742b182b763aa.jpg"
-                  alt=""
-                  className="w-full h-full object-cover rounded-md"
+                  src="https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg"
+                  alt="Movie 1"
+                  className="w-full h-full object-cover rounded-lg flex-1"
                 />
               </div>
-              </SwiperSlide>
+            </SwiperSlide>
 
-              <SwiperSlide>
-                <div>
+            <SwiperSlide>
+              <div className="flex items-center justify-center w-48 h-72">
                 <img
-                  src="https://i.pinimg.com/1200x/93/bc/eb/93bceb9dc583c4511b9742b182b763aa.jpg"
-                  alt=""
-                  className="w-full h-full object-cover rounded-md"
+                  src="https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg"
+                  alt="Movie 1"
+                  className="w-full h-full object-cover rounded-lg flex-1"
                 />
               </div>
-              </SwiperSlide>
-              
-              
-            </div>
+            </SwiperSlide>
+
+            <SwiperSlide>
+              <div className="flex items-center justify-center w-48 h-72">
+                <img
+                  src="https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg"
+                  alt="Movie 1"
+                  className="w-full h-full object-cover rounded-lg flex-1"
+                />
+              </div>
+            </SwiperSlide>
+             <SwiperSlide>
+              <div className="flex items-center justify-center w-48 h-72">
+                <img
+                  src="https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg"
+                  alt="Movie 1"
+                  className="w-full h-full object-cover rounded-lg flex-1"
+                />
+              </div>
+            </SwiperSlide>
+             <SwiperSlide>
+              <div className="flex items-center justify-center w-48 h-72">
+                <img
+                  src="https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg"
+                  alt="Movie 1"
+                  className="w-full h-full object-cover rounded-lg flex-1"
+                />
+              </div>
+            </SwiperSlide>
           </Swiper>
         </div>
       </div>
