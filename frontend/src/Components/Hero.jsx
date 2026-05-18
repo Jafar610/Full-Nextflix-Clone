@@ -16,9 +16,17 @@ function Hero() {
     fetchData();
   }, []);
 
-  const movie = movies[0];
+  const movie = movies[Math.floor(Math.random() * movies.length)];
 
   if (!movie) return null;
+
+
+  function truncate(text, maxLength) {
+  if (!text) return "";
+  return text.length > maxLength
+    ? text.substring(0, maxLength) + "..."
+    : text;
+}
 
   return (
     <div
@@ -34,7 +42,7 @@ function Hero() {
           {movie.title || movie.name || movie.original_name}
         </h1>
 
-        <p className="text-lg mb-6 w-150">{movie.overview}</p>
+        <p className="text-lg mb-6 w-150">{truncate(movie.overview, 150)}</p>
 
         <div className="flex gap-3">
           <div className="flex items-center gap-2 bg-[#E50914] px-5 py-2 rounded-md cursor-pointer">
@@ -42,9 +50,14 @@ function Hero() {
             Play
           </div>
 
-          <div className="flex items-center gap-2 border px-5 py-2 rounded-md text-white cursor-pointer">
+          <div className="flex items-center gap-2 border px-5 py-2 rounded-md text-white cursor-pointer hover:bg-[#E50914] hover:text-white hover:border-[#E50914]">
             <AddCircleIcon />
             My List
+          </div>
+
+          <div className="flex items-center gap-2 border px-5 py-2 rounded-md text-white cursor-pointer hover:bg-[#E50914] hover:text-white hover:border-[#E50914]">
+            <InfoIcon />
+            Detail
           </div>
         </div>
       </div>

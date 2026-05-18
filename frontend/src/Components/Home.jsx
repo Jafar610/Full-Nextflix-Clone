@@ -7,8 +7,8 @@ function Home() {
   return (
     <>
     <Navbar/>
-    <Hero/>
-    <MovieCard/>
+    {/* <Hero/>
+    <MovieCard/> */}
     </>
   )
 }
