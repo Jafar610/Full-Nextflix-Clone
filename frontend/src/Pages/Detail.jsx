@@ -42,7 +42,7 @@ function Detail() {
                 {/* Related Movies */}
                 <div>
                     <h1>Related Movies</h1>
-                    <div>
+                    <div className='flex justify-center items-center overflow-x overflow-hidden'>
                         <img src="" alt="" />
                         <img src="" alt="" />
                         <img src="" alt="" />
