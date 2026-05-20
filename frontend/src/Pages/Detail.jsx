@@ -1,6 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
+
+const formatMovie = (movie) => {
+  if (!movie) return null;
+
+  const title =
+    movie.title || movie.name || movie.original_name || "Movie Title";
+  const rating = movie.vote_average
+    ? movie.vote_average.toFixed(1)
+    : movie.rating || "N/A";
+  const releaseDate =
+    movie.release_date || movie.first_air_date || "2024-01-01";
+  const year = releaseDate.slice(0, 4);
+  const duration = movie.runtime
+    ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}m`
+    : movie.duration || "2h 15m";
+  const ageRating = movie.adult ? "18+" : movie.ageRating || "16+";
+  const image = movie.poster_path
+    ? `https://image.tmdb.org/t/p/original${movie.poster_path}`
+    : movie.image ||
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s";
+  const overview =
+    movie.overview ||
+    movie.description ||
+    "This is an amazing movie with a compelling storyline, great performances, and stunning cinematography. Perfect for anyone who loves this genre. A must-watch film that will keep you entertained from start to finish.";
+
+  return {
+    id: movie.id,
+    title,
+    rating,
+    year,
+    duration,
+    ageRating,
+    image,
+    overview,
+  };
+};
+
 function Detail() {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("overview");
 
   // Mock related movies data
@@ -14,6 +53,8 @@ function Detail() {
       ageRating: "16+",
       image:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
+      overview:
+        "This is an amazing movie with a compelling storyline, great performances, and stunning cinematography.",
     },
     {
       id: 2,
@@ -54,22 +95,27 @@ function Detail() {
       ageRating: "PG",
       image:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
+      overview:
+        "A thrilling mid-season adventure with unforgettable characters and a powerful emotional arc.",
     },
   ];
 
-  const [currentMovie, setCurrentMovie] = useState(relatedMovies[0]);
+  const [currentMovie, setCurrentMovie] = useState(
+    () => formatMovie(location.state?.movie) || relatedMovies[0],
+  );
+
+  useEffect(() => {
+    if (location.state?.movie) {
+      setCurrentMovie(formatMovie(location.state.movie));
+    }
+  }, [location.state?.movie]);
 
   const renderContent = () => {
     switch (activeTab) {
       case "overview":
         return (
           <div className="text-gray-300 leading-relaxed">
-            <p>
-              This is an amazing movie with a compelling storyline, great
-              performances, and stunning cinematography. Perfect for anyone who
-              loves this genre. A must-watch film that will keep you entertained
-              from start to finish.
-            </p>
+            <p>{currentMovie.overview}</p>
           </div>
         );
       case "trailers":

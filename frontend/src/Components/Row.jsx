@@ -1,11 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { requests } from "../api/tmdb";
-function Row({ title, movies}) {
+function Row({ title, movies }) {
+  const navigate = useNavigate();
 
   return (
     <>
@@ -27,8 +29,9 @@ function Row({ title, movies}) {
               <SwiperSlide key={movie.id}>
                 <img
                   src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-                  alt={movie.title}
-                  className="w-full h-72 object-cover rounded-lg"
+                  alt={movie.title || movie.name}
+                  className="w-full h-72 object-cover rounded-lg cursor-pointer"
+                  onClick={() => navigate("/detail", { state: { movie } })}
                 />
               </SwiperSlide>
             ))}
