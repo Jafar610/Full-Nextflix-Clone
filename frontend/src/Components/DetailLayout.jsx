@@ -3,7 +3,8 @@ import React from 'react'
 function DetailLayout() {
   return (
     <>
-    
+     <Details/>
+     <Footer/>
     </>
   )
 }
