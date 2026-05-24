@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
+import axios from "axios";
+
+const TMDB_API_KEY = "5f20a689ebb667fb85a6dbd3b6f26c42";
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 const formatMovie = (movie) => {
   if (!movie) return null;
@@ -38,77 +42,176 @@ const formatMovie = (movie) => {
   };
 };
 
+const fallbackRelated = [
+  {
+    id: 1,
+    title: "Movie Title",
+    rating: 9.0,
+    year: 2018,
+    duration: "2h 30m",
+    ageRating: "16+",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
+    overview:
+      "This is an amazing movie with a compelling storyline, great performances, and stunning cinematography.",
+  },
+  {
+    id: 2,
+    title: "Action Movie",
+    rating: 8.5,
+    year: 2019,
+    duration: "2h 15m",
+    ageRating: "18+",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
+  },
+  {
+    id: 3,
+    title: "Drama Film",
+    rating: 8.8,
+    year: 2020,
+    duration: "2h 45m",
+    ageRating: "13+",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
+  },
+  {
+    id: 4,
+    title: "Thriller",
+    rating: 9.2,
+    year: 2021,
+    duration: "2h 10m",
+    ageRating: "16+",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
+  },
+  {
+    id: 5,
+    title: "Adventure",
+    rating: 8.3,
+    year: 2022,
+    duration: "2h 50m",
+    ageRating: "PG",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
+    overview:
+      "A thrilling mid-season adventure with unforgettable characters and a powerful emotional arc.",
+  },
+];
+
 function Detail() {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("overview");
+  const [relatedMovies, setRelatedMovies] = useState([]);
 
-  // Mock related movies data
-  const relatedMovies = [
-    {
-      id: 1,
-      title: "Movie Title",
-      rating: 9.0,
-      year: 2018,
-      duration: "2h 30m",
-      ageRating: "16+",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
-      overview:
-        "This is an amazing movie with a compelling storyline, great performances, and stunning cinematography.",
-    },
-    {
-      id: 2,
-      title: "Action Movie",
-      rating: 8.5,
-      year: 2019,
-      duration: "2h 15m",
-      ageRating: "18+",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
-    },
-    {
-      id: 3,
-      title: "Drama Film",
-      rating: 8.8,
-      year: 2020,
-      duration: "2h 45m",
-      ageRating: "13+",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
-    },
-    {
-      id: 4,
-      title: "Thriller",
-      rating: 9.2,
-      year: 2021,
-      duration: "2h 10m",
-      ageRating: "16+",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
-    },
-    {
-      id: 5,
-      title: "Adventure",
-      rating: 8.3,
-      year: 2022,
-      duration: "2h 50m",
-      ageRating: "PG",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
-      overview:
-        "A thrilling mid-season adventure with unforgettable characters and a powerful emotional arc.",
-    },
-  ];
-
+  const movieFromState = location.state?.movie;
   const [currentMovie, setCurrentMovie] = useState(
-    () => formatMovie(location.state?.movie) || relatedMovies[0],
+    () => formatMovie(movieFromState) || fallbackRelated[0],
   );
 
-  useEffect(() => {
-    if (location.state?.movie) {
-      setCurrentMovie(formatMovie(location.state.movie));
+  const fetchRelatedMovies = async (movie) => {
+    if (!movie) {
+      setRelatedMovies(fallbackRelated.map(formatMovie));
+      return;
     }
-  }, [location.state?.movie]);
+
+    const genreId = movie.genre_ids?.[0];
+    let url = "";
+
+    if (genreId) {
+      url = `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${genreId}&sort_by=popularity.desc`;
+    } else if (movie.id) {
+      url = `${TMDB_BASE_URL}/movie/${movie.id}/similar?api_key=${TMDB_API_KEY}`;
+    }
+
+    if (!url) {
+      setRelatedMovies(fallbackRelated.map(formatMovie));
+      return;
+    }
+
+    try {
+      const response = await axios.get(url);
+      const results = response.data.results
+        .filter((item) => item.id !== movie.id)
+        .slice(0, 5)
+        .map(formatMovie);
+
+      setRelatedMovies(
+        results.length ? results : fallbackRelated.map(formatMovie),
+      );
+    } catch (error) {
+      console.error("Error fetching related movies:", error);
+      setRelatedMovies(fallbackRelated.map(formatMovie));
+    }
+  };
+
+  const [primaryTrailer, setPrimaryTrailer] = useState(null);
+
+  const fetchVideos = async (movie) => {
+    if (!movie || !movie.id) {
+      setPrimaryTrailer(null);
+      return;
+    }
+
+    const tryMovieVideos = async () => {
+      const url = `${TMDB_BASE_URL}/movie/${movie.id}/videos?api_key=${TMDB_API_KEY}`;
+      const res = await axios.get(url);
+      return res.data.results || [];
+    };
+
+    const tryTvVideos = async () => {
+      const url = `${TMDB_BASE_URL}/tv/${movie.id}/videos?api_key=${TMDB_API_KEY}`;
+      const res = await axios.get(url);
+      return res.data.results || [];
+    };
+
+    try {
+      let results = [];
+      try {
+        results = await tryMovieVideos();
+      } catch (err) {
+        // if movie endpoint fails, try tv endpoint
+        try {
+          results = await tryTvVideos();
+        } catch (err2) {
+          results = [];
+        }
+      }
+
+      const youTube = (results || []).filter((v) => v.site === "YouTube");
+
+      const preferred =
+        youTube.find((v) => /official trailer/i.test(v.name)) ||
+        youTube.find(
+          (v) => /trailer/i.test(v.type) || /trailer/i.test(v.name),
+        ) ||
+        youTube.find((v) => /teaser/i.test(v.type) || /teaser/i.test(v.name)) ||
+        youTube[0] ||
+        null;
+
+      setPrimaryTrailer(preferred);
+    } catch (error) {
+      console.error("Error fetching videos:", error);
+      setPrimaryTrailer(null);
+    }
+  };
+
+  useEffect(() => {
+    if (movieFromState) {
+      setCurrentMovie(formatMovie(movieFromState));
+      fetchRelatedMovies(movieFromState);
+      // primary trailer will be fetched when currentMovie is set below
+    }
+  }, [movieFromState]);
+
+  // Fetch trailer whenever the displayed currentMovie changes
+  useEffect(() => {
+    if (currentMovie?.id) {
+      fetchVideos({ id: currentMovie.id });
+    } else {
+      setPrimaryTrailer(null);
+    }
+  }, [currentMovie?.id]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -121,15 +224,35 @@ function Detail() {
       case "trailers":
         return (
           <div className="text-gray-300">
-            <p>Trailers and promotional videos will be displayed here.</p>
-            <div className="mt-4 flex gap-4">
-              <div className="w-40 h-24 bg-gray-700 rounded flex items-center justify-center">
-                Trailer 1
+            {!primaryTrailer ? (
+              <p>No trailer available for this title.</p>
+            ) : (
+              <div className="bg-gray-900 rounded overflow-hidden max-w-4xl">
+                <div className="aspect-w-16 aspect-h-9">
+                  <iframe
+                    title={primaryTrailer.name}
+                    src={`https://www.youtube.com/embed/${primaryTrailer.key}`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                </div>
+                <div className="p-3">
+                  <p className="text-lg text-white font-semibold truncate">
+                    {primaryTrailer.name}
+                  </p>
+                  <p className="text-sm text-gray-400">{primaryTrailer.type}</p>
+                  <a
+                    href={`https://www.youtube.com/watch?v=${primaryTrailer.key}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm text-red-500 hover:underline"
+                  >
+                    Open on YouTube
+                  </a>
+                </div>
               </div>
-              <div className="w-40 h-24 bg-gray-700 rounded flex items-center justify-center">
-                Trailer 2
-              </div>
-            </div>
+            )}
           </div>
         );
       case "morelike":
