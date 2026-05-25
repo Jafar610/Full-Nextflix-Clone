@@ -191,7 +191,7 @@ function Detail() {
     switch (activeTab) {
       case "overview":
         return (
-          <div className="text-gray-300 leading-relaxed">
+          <div className="text-gray-300 leading-relaxed mr-4">
             <p>{currentMovie.overview}</p>
           </div>
         );
@@ -301,7 +301,7 @@ function Detail() {
         );
       default:
         return null;
-    }
+    } 
   };
 
   return (
