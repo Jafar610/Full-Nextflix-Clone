@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import axios from "axios";
-
-const TMDB_API_KEY = "5f20a689ebb667fb85a6dbd3b6f26c42";
-const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+import { API_KEY, BASE_URL } from "../api/tmdb";
 
 const formatMovie = (movie) => {
   if (!movie) return null;
@@ -42,63 +40,6 @@ const formatMovie = (movie) => {
   };
 };
 
-const fallbackRelated = [
-  {
-    id: 1,
-    title: "Movie Title",
-    rating: 9.0,
-    year: 2018,
-    duration: "2h 30m",
-    ageRating: "16+",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
-    overview:
-      "This is an amazing movie with a compelling storyline, great performances, and stunning cinematography.",
-  },
-  {
-    id: 2,
-    title: "Action Movie",
-    rating: 8.5,
-    year: 2019,
-    duration: "2h 15m",
-    ageRating: "18+",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
-  },
-  {
-    id: 3,
-    title: "Drama Film",
-    rating: 8.8,
-    year: 2020,
-    duration: "2h 45m",
-    ageRating: "13+",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
-  },
-  {
-    id: 4,
-    title: "Thriller",
-    rating: 9.2,
-    year: 2021,
-    duration: "2h 10m",
-    ageRating: "16+",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
-  },
-  {
-    id: 5,
-    title: "Adventure",
-    rating: 8.3,
-    year: 2022,
-    duration: "2h 50m",
-    ageRating: "PG",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRNrj_ilBOh0nfhXRZLd4mbINGj4qEEeZFQ&s",
-    overview:
-      "A thrilling mid-season adventure with unforgettable characters and a powerful emotional arc.",
-  },
-];
-
 function Detail() {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("overview");
@@ -106,12 +47,12 @@ function Detail() {
 
   const movieFromState = location.state?.movie;
   const [currentMovie, setCurrentMovie] = useState(
-    () => formatMovie(movieFromState) || fallbackRelated[0],
+    () => formatMovie(movieFromState) || null,
   );
 
   const fetchRelatedMovies = async (movie) => {
     if (!movie) {
-      setRelatedMovies(fallbackRelated.map(formatMovie));
+      setRelatedMovies([]);
       return;
     }
 
@@ -119,13 +60,13 @@ function Detail() {
     let url = "";
 
     if (genreId) {
-      url = `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${genreId}&sort_by=popularity.desc`;
+      url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&sort_by=popularity.desc`;
     } else if (movie.id) {
-      url = `${TMDB_BASE_URL}/movie/${movie.id}/similar?api_key=${TMDB_API_KEY}`;
+      url = `${BASE_URL}/movie/${movie.id}/similar?api_key=${API_KEY}`;
     }
 
     if (!url) {
-      setRelatedMovies(fallbackRelated.map(formatMovie));
+      setRelatedMovies([]);
       return;
     }
 
@@ -136,16 +77,47 @@ function Detail() {
         .slice(0, 5)
         .map(formatMovie);
 
-      setRelatedMovies(
-        results.length ? results : fallbackRelated.map(formatMovie),
-      );
+      setRelatedMovies(results.length ? results : []);
     } catch (error) {
       console.error("Error fetching related movies:", error);
-      setRelatedMovies(fallbackRelated.map(formatMovie));
+      setRelatedMovies([]);
     }
   };
 
   const [primaryTrailer, setPrimaryTrailer] = useState(null);
+  const [detailInfo, setDetailInfo] = useState(null);
+
+  const fetchDetailInfo = async (movieId) => {
+    if (!movieId) {
+      setDetailInfo(null);
+      return;
+    }
+
+    const tryMovieDetails = async () => {
+      const url = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`;
+      const res = await axios.get(url);
+      return res.data;
+    };
+
+    const tryTvDetails = async () => {
+      const url = `${BASE_URL}/tv/${movieId}?api_key=${API_KEY}`;
+      const res = await axios.get(url);
+      return res.data;
+    };
+
+    try {
+      let details = null;
+      try {
+        details = await tryMovieDetails();
+      } catch (err) {
+        details = await tryTvDetails();
+      }
+      setDetailInfo(details);
+    } catch (error) {
+      console.error("Error fetching detail info:", error);
+      setDetailInfo(null);
+    }
+  };
 
   const fetchVideos = async (movie) => {
     if (!movie || !movie.id) {
@@ -154,13 +126,13 @@ function Detail() {
     }
 
     const tryMovieVideos = async () => {
-      const url = `${TMDB_BASE_URL}/movie/${movie.id}/videos?api_key=${TMDB_API_KEY}`;
+      const url = `${BASE_URL}/movie/${movie.id}/videos?api_key=${API_KEY}`;
       const res = await axios.get(url);
       return res.data.results || [];
     };
 
     const tryTvVideos = async () => {
-      const url = `${TMDB_BASE_URL}/tv/${movie.id}/videos?api_key=${TMDB_API_KEY}`;
+      const url = `${BASE_URL}/tv/${movie.id}/videos?api_key=${API_KEY}`;
       const res = await axios.get(url);
       return res.data.results || [];
     };
@@ -208,8 +180,10 @@ function Detail() {
   useEffect(() => {
     if (currentMovie?.id) {
       fetchVideos({ id: currentMovie.id });
+      fetchDetailInfo(currentMovie.id);
     } else {
       setPrimaryTrailer(null);
+      setDetailInfo(null);
     }
   }, [currentMovie?.id]);
 
@@ -262,20 +236,67 @@ function Detail() {
           </div>
         );
       case "detailinfo":
+        if (!detailInfo) {
+          return (
+            <div className="text-gray-300">
+              <p>Loading detailed movie information...</p>
+            </div>
+          );
+        }
+
+        const genres =
+          detailInfo.genres?.map((genre) => genre.name).join(", ") || "N/A";
+        const language = detailInfo.original_language
+          ? detailInfo.original_language.toUpperCase()
+          : detailInfo.spoken_languages?.[0]?.english_name || "N/A";
+        const releaseDate =
+          detailInfo.release_date || detailInfo.first_air_date || "N/A";
+        const runtime = detailInfo.runtime
+          ? `${Math.floor(detailInfo.runtime / 60)}h ${detailInfo.runtime % 60}m`
+          : Array.isArray(detailInfo.episode_run_time) &&
+              detailInfo.episode_run_time.length
+            ? `${Math.floor(detailInfo.episode_run_time[0] / 60)}h ${detailInfo.episode_run_time[0] % 60}m`
+            : "N/A";
+        const budget = detailInfo.budget
+          ? `$${detailInfo.budget.toLocaleString()}`
+          : "N/A";
+        const revenue = detailInfo.revenue
+          ? `$${detailInfo.revenue.toLocaleString()}`
+          : "N/A";
+
         return (
-          <div className="text-gray-300">
+          <div className="text-gray-300 space-y-2">
             <p>
-              <strong>Director:</strong> John Director
+              <strong>Title:</strong>{" "}
+              {detailInfo.title || detailInfo.name || currentMovie.title}
             </p>
             <p>
-              <strong>Cast:</strong> Actor Name, Another Actor
+              <strong>Overview:</strong>{" "}
+              {detailInfo.overview || currentMovie.overview}
             </p>
             <p>
-              <strong>Genre:</strong> Action, Thriller, Drama
+              <strong>Genre:</strong> {genres}
             </p>
             <p>
-              <strong>Language:</strong> English
+              <strong>Language:</strong> {language}
             </p>
+            <p>
+              <strong>Release Date:</strong> {releaseDate}
+            </p>
+            <p>
+              <strong>Runtime:</strong> {runtime}
+            </p>
+            <p>
+              <strong>Budget:</strong> {budget}
+            </p>
+            <p>
+              <strong>Revenue:</strong> {revenue}
+            </p>
+            {detailInfo.status && (
+              <p>
+                <strong>Status:</strong> {detailInfo.status}
+              </p>
+            )}
           </div>
         );
       default:
@@ -377,34 +398,42 @@ function Detail() {
           {/* Related Movies */}
           <div className="mt-8">
             <h1 className="text-2xl font-bold mb-4">Related Movies</h1>
-            <div
-              className="flex gap-4 overflow-x-auto pb-2 scroll-smooth"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-              <style>{`
-                div::-webkit-scrollbar {
-                  display: none;
-                }
-              `}</style>
-              {relatedMovies.map((movie) => (
-                <div
-                  key={movie.id}
-                  onClick={() => setCurrentMovie(movie)}
-                  className="flex-shrink-0 cursor-pointer transform transition hover:scale-105"
-                >
-                  <img
-                    src={movie.image}
-                    alt={movie.title}
-                    className={`w-40 h-56 rounded-lg object-cover ${
-                      currentMovie.id === movie.id ? "ring-4 ring-red-600" : ""
-                    }`}
-                  />
-                  <p className="text-sm text-gray-300 mt-2 truncate">
-                    {movie.title}
-                  </p>
-                </div>
-              ))}
-            </div>
+            {relatedMovies.length === 0 ? (
+              <p className="text-gray-400">
+                There is no related movie available.
+              </p>
+            ) : (
+              <div
+                className="flex gap-4 overflow-x-auto pb-2 scroll-smooth"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                <style>{`
+                  div::-webkit-scrollbar {
+                    display: none;
+                  }
+                `}</style>
+                {relatedMovies.map((movie) => (
+                  <div
+                    key={movie.id}
+                    onClick={() => setCurrentMovie(movie)}
+                    className="flex-shrink-0 cursor-pointer transform transition hover:scale-105"
+                  >
+                    <img
+                      src={movie.image}
+                      alt={movie.title}
+                      className={`w-40 h-56 rounded-lg object-cover ${
+                        currentMovie.id === movie.id
+                          ? "ring-4 ring-red-600"
+                          : ""
+                      }`}
+                    />
+                    <p className="text-sm text-gray-300 mt-2 truncate">
+                      {movie.title}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
