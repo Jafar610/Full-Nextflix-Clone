@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import InfoIcon from "@mui/icons-material/Info";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { requests } from "../api/tmdb";
 
@@ -20,13 +21,12 @@ function Hero() {
 
   if (!movie) return null;
 
-
   function truncate(text, maxLength) {
-  if (!text) return "";
-  return text.length > maxLength
-    ? text.substring(0, maxLength) + "..."
-    : text;
-}
+    if (!text) return "";
+    return text.length > maxLength
+      ? text.substring(0, maxLength) + "..."
+      : text;
+  }
 
   return (
     <div
@@ -55,10 +55,14 @@ function Hero() {
             My List
           </div>
 
-          <div className="flex items-center gap-2 border px-5 py-2 rounded-md text-white cursor-pointer hover:bg-[#E50914] hover:text-white hover:border-[#E50914]">
+          <Link
+            to="/detail"
+            state={{ movie }}
+            className="flex items-center gap-2 border px-5 py-2 rounded-md text-white cursor-pointer hover:bg-[#E50914] hover:text-white hover:border-[#E50914]"
+          >
             <InfoIcon />
             Detail
-          </div>
+          </Link>
         </div>
       </div>
     </div>
