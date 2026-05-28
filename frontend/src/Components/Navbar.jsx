@@ -4,6 +4,7 @@ import logo from "../assets/Netflix_logo.png";
 import profile from "../assets/Netflix-avatar.png";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
 function Navbar() {
   return (
     <>
@@ -17,8 +18,9 @@ function Navbar() {
             <li>
               <Link to="/tv">Tv Show</Link>
             </li>
-            <li>Movie</li>
-            <li>News & Popular</li>
+            <li>
+              <Link to="/popular">Popular & News</Link>
+            </li>
             <li>
               <Link to="/mylist">My List</Link>
             </li>
