@@ -11,8 +11,12 @@ function Navbar() {
         <div className="flex justify-center items-center">
           <img src={logo} alt="" className="w-25 mr-10" />
           <ul className="flex justify-center items-center gap-5 text-gray-100">
-            <li>Home</li>
-            <li>Tv Show</li>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/tv">Tv Show</Link>
+            </li>
             <li>Movie</li>
             <li>News & Popular</li>
             <li>
