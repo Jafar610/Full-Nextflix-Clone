@@ -68,9 +68,6 @@ function TvShow() {
                   <p className="mt-2 text-sm text-gray-400">
                     {show.first_air_date || "Unknown air date"}
                   </p>
-                  <p className="mt-3 text-sm text-gray-300 overflow-hidden text-ellipsis">
-                    {show.overview || "No description available."}
-                  </p>
                 </div>
               </button>
             ))}
