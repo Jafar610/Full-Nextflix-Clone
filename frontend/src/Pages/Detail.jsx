@@ -301,15 +301,15 @@ function Detail() {
         );
       default:
         return null;
-    } 
+    }
   };
 
   return (
     <>
-      <div className="w-full min-h-screen flex gap-8 bg-[#111111] text-white px-15 py-10 overflow-y-auto">
+      <div className="w-full min-h-screen flex flex-col lg:flex-row gap-8 bg-[#111111] text-white px-4 md:px-10 py-8 overflow-y-auto">
         {/* Image - Left Side */}
-        <div className="sticky top-10 flex-shrink-0 flex justify-center items-center h-fit">
-          <div className="relative">
+        <div className="lg:sticky lg:top-10 flex-shrink-0 flex justify-center items-center h-fit w-full lg:w-[30%]">
+          <div className="relative max-w-xl w-full">
             {/* Glow Effect Background */}
             <div className="absolute inset-0 bg-red-600 opacity-30 blur-3xl rounded-2xl transform -z-10"></div>
 
@@ -317,38 +317,40 @@ function Detail() {
             <img
               src={currentMovie.image}
               alt={currentMovie.title}
-              className="w-80 h-auto rounded-2xl shadow-2xl hover:shadow-red-600/50 hover:shadow-2xl transform transition duration-300 hover:scale-105 border-2 border-gray-700 hover:border-red-600"
+              className="w-full h-64 sm:h-80 md:h-[26rem] lg:h-auto rounded-2xl shadow-2xl hover:shadow-red-600/50 transition duration-300 hover:scale-105 border-2 border-gray-700 hover:border-red-600 object-cover"
             />
 
             {/* Rating Badge */}
-            <div className="absolute top-4 right-4 bg-red-600 px-3 py-1 rounded-full flex items-center gap-1 shadow-lg">
+            <div className="absolute top-4 right-4 bg-red-600 px-3 py-1 rounded-full flex items-center gap-1 shadow-lg text-xs sm:text-sm">
               <StarIcon className="text-yellow-300 text-sm" />
-              <span className="font-bold text-sm">{currentMovie.rating}</span>
+              <span className="font-bold">{currentMovie.rating}</span>
             </div>
           </div>
         </div>
         {/* Detail Info - Right Side */}
-        <div className="flex-1 flex flex-col gap-6 pb-10">
+        <div className="flex-1 flex flex-col gap-6 pb-10 w-full">
           {/* Movie title and Rate - Full Width */}
-          <div className="w-full flex justify-between items-center">
-            <h1 className="text-4xl font-bold">{currentMovie.title}</h1>
-            <div className="flex items-center gap-2">
-              <p className="text-xl font-semibold">{currentMovie.rating}</p>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold break-words">
+              {currentMovie.title}
+            </h1>
+            <div className="flex items-center gap-2 text-lg sm:text-xl">
+              <p className="font-semibold">{currentMovie.rating}</p>
               <StarIcon className="text-yellow-400" />
             </div>
           </div>
 
           {/* Movie date & movie time length */}
           <div>
-            <h1 className="text-lg text-gray-300">
+            <p className="text-sm sm:text-base text-gray-300">
               {currentMovie.year} | {currentMovie.duration} |{" "}
               {currentMovie.ageRating}
-            </h1>
+            </p>
           </div>
 
           {/* Navigation  */}
           <div>
-            <ul className="flex gap-6 border-b border-gray-700 pb-4">
+            <ul className="flex flex-wrap gap-3 border-b border-gray-700 pb-4">
               <li
                 onClick={() => setActiveTab("overview")}
                 className={`cursor-pointer pb-2 ${
@@ -393,11 +395,13 @@ function Detail() {
           </div>
 
           {/* Detail Info Content */}
-          <div className="text-sm">{renderContent()}</div>
+          <div className="text-sm sm:text-base">{renderContent()}</div>
 
           {/* Related Movies */}
           <div className="mt-8">
-            <h1 className="text-2xl font-bold mb-4">Related Movies</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-4">
+              Related Movies
+            </h1>
             {relatedMovies.length === 0 ? (
               <p className="text-gray-400">
                 There is no related movie available.
@@ -421,13 +425,13 @@ function Detail() {
                     <img
                       src={movie.image}
                       alt={movie.title}
-                      className={`w-40 h-56 rounded-lg object-cover ${
+                      className={`w-32 sm:w-40 h-44 sm:h-56 rounded-lg object-cover ${
                         currentMovie.id === movie.id
                           ? "ring-4 ring-red-600"
                           : ""
                       }`}
                     />
-                    <p className="text-sm text-gray-300 mt-2 truncate">
+                    <p className="text-xs sm:text-sm text-gray-300 mt-2 max-w-[8rem] truncate">
                       {movie.title}
                     </p>
                   </div>

@@ -40,17 +40,15 @@ function Mylist() {
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold mb-6">My List</h1>
 
-        <div className="flex flex-wrap -mx-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {list.length === 0 && (
-            <p className="text-gray-300">No movies in your list yet.</p>
+            <p className="text-gray-300 col-span-2 sm:col-span-3">
+              No movies in your list yet.
+            </p>
           )}
 
           {list.map((movie) => (
-            <div
-              key={movie.id}
-              className="px-2 mb-4"
-              style={{ flex: "0 0 20%", maxWidth: "20%" }}
-            >
+            <div key={movie.id}>
               <div
                 className="relative cursor-pointer"
                 onClick={() => navigate("/detail", { state: { movie } })}
@@ -58,7 +56,7 @@ function Mylist() {
                 <img
                   src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
                   alt={movie.title}
-                  className="w-full h-56 object-cover rounded-lg"
+                  className="w-full h-40 sm:h-48 md:h-56 object-cover rounded-lg"
                 />
 
                 <button
@@ -72,7 +70,7 @@ function Mylist() {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    className="w-7 h-7"
+                    className="w-5 h-5 sm:w-7 sm:h-7"
                     fill={"currentColor"}
                     style={{ color: "#ef4444" }}
                   >
@@ -81,7 +79,9 @@ function Mylist() {
                 </button>
 
                 <div className="mt-2">
-                  <h2 className="text-sm font-semibold">{movie.title}</h2>
+                  <h2 className="text-sm sm:text-base font-semibold truncate">
+                    {movie.title}
+                  </h2>
                 </div>
               </div>
             </div>

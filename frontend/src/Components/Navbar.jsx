@@ -48,7 +48,20 @@ function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="relative hidden sm:inline-flex">
+          {/* Desktop/large: inline search input shown when toggled */}
+          <div className="hidden sm:flex items-center gap-2">
+            {showSearch && (
+              <div className="flex items-center bg-[#222] rounded-md px-2 py-1">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  name="search"
+                  placeholder="Search..."
+                  className="w-36 md:w-56 lg:w-72 text-sm rounded-md bg-transparent px-2 py-1 text-white outline-none focus:border-[#E50914] focus:ring-2 focus:ring-[#E50914]/30"
+                />
+              </div>
+            )}
+
             <button
               type="button"
               onClick={() => setShowSearch((v) => !v)}
@@ -56,18 +69,6 @@ function Navbar() {
             >
               <SearchIcon />
             </button>
-
-            {showSearch && (
-              <div className="absolute right-0 top-full z-20 mt-2 w-full max-w-xs rounded-md bg-[#222] p-2 shadow-lg sm:max-w-sm">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  name="search"
-                  placeholder="Search..."
-                  className="w-full rounded-md border border-white/10 bg-[#111] px-3 py-2 text-white outline-none focus:border-[#E50914] focus:ring-2 focus:ring-[#E50914]/30"
-                />
-              </div>
-            )}
           </div>
 
           <div className="hidden items-center gap-2 sm:flex">

@@ -9,23 +9,29 @@ const footerColumns = [
 
 function Footer() {
   return (
-    <footer className="bg-[#141414] text-[#757575] px-6 py-8 sm:px-10">
+    <footer className="bg-[#141414] text-[#757575] px-4 py-6 sm:px-10 sm:py-8">
       <div className="max-w-7xl mx-auto">
-        <p className="text-sm mb-6">
+        <p className="text-xs sm:text-sm mb-4 sm:mb-6 text-center sm:text-left">
           Questions? Call{" "}
-          <a href="tel:0942419800" className="text-white hover:underline">
+          <a
+            href="tel:0942419800"
+            className="text-white hover:underline inline-block"
+          >
             0942419800
           </a>
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-4 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs sm:text-sm">
           {footerColumns.map((column, columnIndex) => (
-            <ul key={columnIndex} className="space-y-2">
+            <ul
+              key={columnIndex}
+              className="space-y-2 text-center sm:text-left"
+            >
               {column.map((item) => (
                 <li key={item}>
                   <a
                     href="#"
-                    className="hover:underline text-[#757575] hover:text-white"
+                    className="block py-2 sm:py-0 hover:underline text-[#757575] hover:text-white"
                   >
                     {item}
                   </a>
@@ -35,7 +41,9 @@ function Footer() {
           ))}
         </div>
 
-        <p className="text-sm text-[#757575] mt-8">Netflix Ethiopia</p>
+        <p className="text-xs sm:text-sm text-[#757575] mt-6 sm:mt-8 text-center">
+          Netflix Ethiopia
+        </p>
       </div>
     </footer>
   );
