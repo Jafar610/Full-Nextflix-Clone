@@ -10,13 +10,28 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const inputRef = useRef(null);
+  const profileRef = useRef(null);
 
   useEffect(() => {
     if (showSearch && inputRef.current) {
       inputRef.current.focus();
     }
   }, [showSearch]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setShowProfileMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const navLinks = [
     { label: "Home", to: "/" },
@@ -26,7 +41,7 @@ function Navbar() {
   ];
 
   return (
-    <nav className="bg-[#111] text-white w-full max-w-full px-4 py-3 shadow-lg">
+    <nav className="sticky top-0 z-50 bg-[#111] text-white w-full max-w-full px-4 py-3 shadow-lg">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <Link to="/" className="flex items-center shrink-0">
@@ -71,9 +86,37 @@ function Navbar() {
             </button>
           </div>
 
-          <div className="hidden items-center gap-2 sm:flex">
-            <img src={profile} alt="Profile" className="h-8 w-8 rounded-full" />
-            <ArrowDropDownIcon className="text-white" />
+          <div
+            className="relative hidden items-center gap-2 sm:flex"
+            ref={profileRef}
+          >
+            <button
+              type="button"
+              onClick={() => setShowProfileMenu((v) => !v)}
+              className="inline-flex items-center gap-2 rounded-md px-2 py-1 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#E50914]"
+            >
+              <img
+                src={profile}
+                alt="Profile"
+                className="h-8 w-8 rounded-full"
+              />
+              <ArrowDropDownIcon className="text-white" />
+            </button>
+
+            {showProfileMenu && (
+              <div className="absolute right-0 top-full mt-2 w-36 rounded-md border border-white/10 bg-[#111] shadow-lg z-50">
+                <button
+                  type="button"
+                  className="w-full px-3 py-2 text-left text-sm text-white hover:bg-white/10"
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    // Put logout logic here if needed
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
 
           <button
