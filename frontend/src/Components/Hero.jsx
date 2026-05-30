@@ -70,41 +70,46 @@ function Hero() {
 
   return (
     <div
-      className="h-[80vh] bg-cover bg-center relative flex items-end"
+      className="h-[60vh] md:h-[80vh] bg-cover bg-center relative flex items-end"
       style={{
-        backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.backdrop_path})`,
+        backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.backdrop_path || movie.poster_path})`,
       }}
     >
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-[#111] to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-[#111] to-transparent" />
 
-      <div className="absolute bottom-10 left-10 text-white">
-        <h1 className="text-4xl font-bold mb-4">
+      <div className="absolute bottom-6 left-4 md:bottom-10 md:left-10 text-white max-w-[92%] md:max-w-[55%]">
+        <h1 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">
           {movie.title || movie.name || movie.original_name}
         </h1>
 
-        <p className="text-lg mb-6 w-150">{truncate(movie.overview, 150)}</p>
+        <p className="text-xs sm:text-sm md:text-lg mb-4 max-w-[40rem]">
+          {truncate(movie.overview, 150)}
+        </p>
 
-        <div className="flex gap-3">
-          <div
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <button
             onClick={handlePlay}
-            className="flex items-center gap-2 bg-[#E50914] px-5 py-2 rounded-md cursor-pointer"
+            className="flex w-full sm:w-auto items-center justify-center gap-2 bg-[#E50914] px-3 sm:px-5 py-1.5 sm:py-2 rounded-md cursor-pointer text-sm sm:text-base"
           >
-            <PlayCircleIcon />
-            Play
-          </div>
+            <PlayCircleIcon fontSize="small" />
+            <span>Play</span>
+          </button>
 
-          <div className="flex items-center gap-2 border px-5 py-2 rounded-md text-white cursor-pointer hover:bg-[#E50914] hover:text-white hover:border-[#E50914]">
-            <AddCircleIcon />
-            My List
-          </div>
+          <Link
+            to="/mylist"
+            className="flex w-full sm:w-auto items-center justify-center gap-2 border px-3 sm:px-5 py-1.5 sm:py-2 rounded-md text-white cursor-pointer hover:bg-[#E50914] hover:text-white hover:border-[#E50914] text-sm sm:text-base"
+          >
+            <AddCircleIcon fontSize="small" />
+            <span>My List</span>
+          </Link>
 
           <Link
             to="/detail"
             state={{ movie }}
-            className="flex items-center gap-2 border px-5 py-2 rounded-md text-white cursor-pointer hover:bg-[#E50914] hover:text-white hover:border-[#E50914]"
+            className="flex w-full sm:w-auto items-center justify-center gap-2 border px-3 sm:px-5 py-1.5 sm:py-2 rounded-md text-white cursor-pointer hover:bg-[#E50914] hover:text-white hover:border-[#E50914] text-sm sm:text-base"
           >
-            <InfoIcon />
-            Detail
+            <InfoIcon fontSize="small" />
+            <span>Detail</span>
           </Link>
         </div>
       </div>

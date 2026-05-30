@@ -69,19 +69,30 @@ function Row({ title, movies }) {
             className="py-4"
             modules={[Autoplay]}
             spaceBetween={10}
-            slidesPerView={5}
             autoplay={{
               delay: 2500,
               disableOnInteraction: false,
             }}
+            breakpoints={{
+              // when window width is >= 320px
+              320: { slidesPerView: 1 },
+              // >= 480px
+              480: { slidesPerView: 2 },
+              // >= 640px
+              640: { slidesPerView: 3 },
+              // >= 1024px
+              1024: { slidesPerView: 4 },
+              // >= 1280px
+              1280: { slidesPerView: 5 },
+            }}
           >
             {movies?.map((movie) => (
               <SwiperSlide key={movie.id}>
-                <div className="relative">
+                <div className="relative px-1">
                   <img
                     src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
                     alt={movie.title || movie.name}
-                    className="w-full h-72 object-cover rounded-lg cursor-pointer"
+                    className="w-full h-48 sm:h-56 md:h-72 object-cover rounded-lg cursor-pointer"
                     onClick={() => navigate("/detail", { state: { movie } })}
                   />
 
@@ -96,7 +107,7 @@ function Row({ title, movies }) {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      className="w-7 h-7 transition-colors"
+                      className="w-5 h-5 sm:w-7 sm:h-7 transition-colors"
                       fill={
                         liked.has(movie.id) ? "currentColor" : "transparent"
                       }
