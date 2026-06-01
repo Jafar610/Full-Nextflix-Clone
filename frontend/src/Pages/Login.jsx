@@ -5,6 +5,10 @@ import netflixLogo from "../assets/Netflix_logo.png";
 function Login() {
   const [email, setEmail] = useState("");
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <div
       className="min-h-screen bg-cover bg-center text-white"
@@ -34,7 +38,7 @@ function Login() {
               to create or restart your membership.
             </p>
             <form
-              onSubmit={(event) => event.preventDefault()}
+              onSubmit={handleSubmit}
               className="mx-auto flex max-w-3xl flex-col gap-4 sm:flex-row"
             >
               <input

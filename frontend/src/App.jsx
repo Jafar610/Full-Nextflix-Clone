@@ -5,7 +5,7 @@ import Detail from "./Pages/Detail";
 import TvShow from "./Pages/TvShow";
 import Popular from "./Pages/Popular";
 import MyListMovie from "./Components/MyListMovie";
-import Login from "./Pages/Login";
+import Banner from "./Components/Banner";
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Banner />} />
           <Route path="/tv" element={<TvShow />} />
           <Route path="/popular" element={<Popular />} />
           <Route path="/detail" element={<Detail />} />
