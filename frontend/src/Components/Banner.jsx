@@ -1,4 +1,4 @@
-import React from "react";
+
 import Login from "../Pages/Login";
 import Trending from "../Pages/Trending";
 

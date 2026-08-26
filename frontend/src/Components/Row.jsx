@@ -13,7 +13,7 @@ function Row({ title, movies }) {
       const stored = JSON.parse(localStorage.getItem("mylist") || "[]");
       return new Set(stored.map((m) => m.id));
     } catch (e) {
-      return new Set();
+      return new Set(e);
     }
   });
 
